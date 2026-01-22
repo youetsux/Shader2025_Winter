@@ -1,4 +1,4 @@
-﻿// MyFirstGame.cpp : アプリケーションのエントリ ポイントを定義します。
+// MyFirstGame.cpp : アプリケーションのエントリ ポイントを定義します。
 //
 
 #include "framework.h"
@@ -13,6 +13,9 @@
 #include "Resource.h"
 #include "Stage.h"
 
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_dx11.h"
+#include "imgui/imgui_impl_win32.h"
 
 
 #pragma comment(lib, "winmm.lib")
@@ -70,6 +73,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     if (FAILED(hr))
     {
 		return 0;
+    }
+
+    //Imgui初期化
+    {
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+        ImGuiIO& io = ImGui::GetIO();
+        ImGui_ImplWin32_Init(hWnd);
+        ImGui_ImplDX11_Init(Direct3D::pDevice, Direct3D::pContext);
+        ImGui::StyleColorsLight();
     }
 
 	Camera::Initialize(); // カメラの初期化
@@ -220,6 +233,11 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    return TRUE;
 }
 
+//  ImGuiのメッセージ処理
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler
+(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+
 //
 //  関数: WndProc(HWND, UINT, WPARAM, LPARAM)
 //
@@ -232,6 +250,10 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	// ImGuiのメッセージ処理を最初に行う
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
+		return true;
+
     switch (message)
     {
     case WM_COMMAND:
