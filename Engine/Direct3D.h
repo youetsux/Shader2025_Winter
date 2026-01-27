@@ -2,8 +2,9 @@
 #include <windows.h>
 #include <d3d11.h>
 #include <assert.h>
+#include <DirectXMath.h>
 
-//ƒŠƒ“ƒJ
+//ãƒªãƒ³ã‚«
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 
@@ -12,33 +13,36 @@
 
 enum SHADER_TYPE
 {
-	SHADER_3D,	//3D—pƒVƒF[ƒ_[
-	SHADER_2D,	//2D—pƒVƒF[ƒ_[
-	SHADER_MAX //ƒVƒF[ƒ_[‚ÌÅ‘å”
+	SHADER_3D,	//3Dç”¨ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
+	SHADER_2D,	//2Dç”¨ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
+	SHADER_MAX //ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®æœ€å¤§æ•°
 };
 
 namespace Direct3D
 {
-	//extern‚Í‚Ç‚±‚©‚ÉÀÛ‚Ì’è‹`iéŒ¾j•¶‚ ‚é‚¼‚Á‚ÄéŒ¾
+	//externã¯ã©ã“ã‹ã«å®Ÿéš›ã®å®šç¾©ï¼ˆå®£è¨€ï¼‰æ–‡ã‚ã‚‹ãã£ã¦å®£è¨€
 	extern ID3D11Device* pDevice;
 	extern ID3D11DeviceContext* pContext;
-	//ƒVƒF[ƒ_[€”õ
+	//ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼æº–å‚™
 	HRESULT InitShader();
-	HRESULT InitShader3D();//3D—pƒVƒF[ƒ_[‰Šú‰»
-	HRESULT InitShader2D();//2D—pƒVƒF[ƒ_[‰Šú‰»
+	HRESULT InitShader3D();//3Dç”¨ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼åˆæœŸåŒ–
+	HRESULT InitShader2D();//2Dç”¨ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼åˆæœŸåŒ–
 
-	void SetShader(SHADER_TYPE type); //ƒVƒF[ƒ_[‚ğƒZƒbƒg
+	void SetShader(SHADER_TYPE type); //ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’ã‚»ãƒƒãƒˆ
 
 
-	//‰Šú‰»
+	//åˆæœŸåŒ–
 	HRESULT Initialize(int winW, int winH, HWND hWnd);
 
-	//•`‰æŠJn
+	//æç”»é–‹å§‹
 	void BeginDraw();
 
-	//•`‰æI—¹
+	//æç”»çµ‚äº†
 	void EndDraw();
 
-	//‰ğ•ú
+	//è§£æ”¾
 	void Release();
+
+	DirectX::XMFLOAT4 GetLightPos(); //ãƒ©ã‚¤ãƒˆã®ä½ç½®
+	void SetLightPos(DirectX::XMFLOAT4 pos); //ãƒ©ã‚¤ãƒˆã®ä½ç½®è¨­å®š
 };

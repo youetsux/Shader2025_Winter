@@ -5,25 +5,26 @@
 using namespace DirectX;
 
 //-----------------------------------------------------------
-//ƒJƒƒ‰
+//ã‚«ãƒ¡ãƒ©
 //-----------------------------------------------------------
 namespace Camera
 {
-	//‰Šú‰»iƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñì¬j
+	//åˆæœŸåŒ–ï¼ˆãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ä½œæˆï¼‰
 	void Initialize();
 
-	//XViƒrƒ…[s—ñì¬j
+	//æ›´æ–°ï¼ˆãƒ“ãƒ¥ãƒ¼è¡Œåˆ—ä½œæˆï¼‰
 	void Update();
 
-	//Ž‹“_iƒJƒƒ‰‚ÌˆÊ’uj‚ðÝ’è
+	//è¦–ç‚¹ï¼ˆã‚«ãƒ¡ãƒ©ã®ä½ç½®ï¼‰ã‚’è¨­å®š
 	void SetPosition(XMVECTOR position);
+	XMVECTOR GetPosition();
 
-	//Å“_iŒ©‚éˆÊ’uj‚ðÝ’è
+	//ç„¦ç‚¹ï¼ˆè¦‹ã‚‹ä½ç½®ï¼‰ã‚’è¨­å®š
 	void SetTarget(XMVECTOR target);
 
-	//ƒrƒ…[s—ñ‚ðŽæ“¾
+	//ãƒ“ãƒ¥ãƒ¼è¡Œåˆ—ã‚’å–å¾—
 	XMMATRIX GetViewMatrix();
 
-	//ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñ‚ðŽæ“¾
+	//ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ã‚’å–å¾—
 	XMMATRIX GetProjectionMatrix();
 };

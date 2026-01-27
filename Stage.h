@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Engine\\GameObject.h"
 #include <windows.h>
 #include "Engine\\Sprite.h"
@@ -6,7 +6,11 @@
 namespace
 {
 }
-
+struct CONSTANTBUFFER_STAGE
+{
+	XMFLOAT4 lightPosition;// 光源の位置(らんばーとのときは方向）
+	XMFLOAT4 eyePosition; // カメラの位置
+};
 
 class Stage :
     public GameObject
@@ -20,5 +24,7 @@ public:
 	void Release()override;
 private:
 	Sprite* pMelbourne_;
+	ID3D11Buffer* pConstantBuffer_;
+	void InitConstantBuffer();
 };
 

@@ -1,76 +1,86 @@
-//„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ
-// ƒeƒNƒXƒ`ƒƒ•ƒTƒ“ƒvƒ‰[ƒf[ƒ^‚ÌƒOƒ[ƒoƒ‹•Ï”’è‹`
-//„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ
-Texture2D g_texture : register(t0); //ƒeƒNƒXƒ`ƒƒ[
-SamplerState g_sampler : register(s0); //ƒTƒ“ƒvƒ‰[
+//â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ãƒ†ã‚¯ã‚¹ãƒãƒ£ï¼†ã‚µãƒ³ãƒ—ãƒ©ãƒ¼ãƒ‡ãƒ¼ã‚¿ã®ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°å®šç¾©
+//â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+Texture2D g_texture : register(t0); //ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ¼
+SamplerState g_sampler : register(s0); //ã‚µãƒ³ãƒ—ãƒ©ãƒ¼
 
-//„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ
-// ƒRƒ“ƒXƒ^ƒ“ƒgƒoƒbƒtƒ@
-// DirectX ‘¤‚©‚ç‘—M‚³‚ê‚Ä‚­‚éAƒ|ƒŠƒSƒ“’¸“_ˆÈŠO‚Ì”î•ñ‚Ì’è‹`
-//„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ
-cbuffer global
+//â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ã‚³ãƒ³ã‚¹ã‚¿ãƒ³ãƒˆãƒãƒƒãƒ•ã‚¡
+// DirectX å´ã‹ã‚‰é€ä¿¡ã•ã‚Œã¦ãã‚‹ã€ãƒãƒªã‚´ãƒ³é ‚ç‚¹ä»¥å¤–ã®è«¸æƒ…å ±ã®å®šç¾©
+//â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+cbuffer global : register(b0)
 {
-    float4x4 matWVP; // ƒ[ƒ‹ƒhEƒrƒ…[EƒvƒƒWƒFƒNƒVƒ‡ƒ“‚Ì‡¬s—ñ
-    float4x4 matNormal; // ƒ[ƒ‹ƒhs—ñ
-    float4 diffuseColor; // ƒfƒBƒtƒ…[ƒYF
-    bool useTexture; // ƒeƒNƒXƒ`ƒƒ[‚ðŽg‚¤‚©‚Ç‚¤‚©
+    float4x4 matWVP; // ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒ»ãƒ“ãƒ¥ãƒ¼ãƒ»ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³ã®åˆæˆè¡Œåˆ—
+    float4x4 matWorld; // ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—
+    float4x4 matNormal; // æ³•ç·šå¤‰æ›è¡Œåˆ—
+    float4 diffuseColor; // ãƒ‡ã‚£ãƒ•ãƒ¥ãƒ¼ã‚ºè‰²
+    float4 diffusefactor; // ãƒ‡ã‚£ãƒ•ãƒ¥ãƒ¼ã‚ºä¿‚æ•°
+    float4 specular; // ã‚¹ãƒšã‚­ãƒ¥ãƒ©è‰²
+    float4 shininess; // ã‚·ãƒ£ã‚¤ãƒ‹ãƒã‚¹
+    float4 ambient; // ã‚¢ãƒ³ãƒ“ã‚¨ãƒ³ãƒˆè‰²
+    bool useTexture; // ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ¼ã‚’ä½¿ã†ã‹ã©ã†ã‹
 };
 
-//„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ
-// ’¸“_ƒVƒF[ƒ_[o—Í•ƒsƒNƒZƒ‹ƒVƒF[ƒ_[“ü—Íƒf[ƒ^\‘¢‘Ì
-//„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ
+//â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼å‡ºåŠ›ï¼†ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼å…¥åŠ›ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“
+//â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 struct VS_OUT
 {
-                 //ƒZƒ}ƒ“ƒeƒBƒNƒX
-    float4 pos : SV_POSITION; //ˆÊ’u
-    float2 uv : TEXCOORD; //UVÀ•W
-    float4 color : COLOR; //Fi–¾‚é‚³j
+                 //ã‚»ãƒžãƒ³ãƒ†ã‚£ã‚¯ã‚¹
+    float4 wpos : Position; //ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™
+    float4 spos : SV_POSITION; //ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ä½ç½®
+    float2 uv : TEXCOORD; //UVåº§æ¨™
+    float4 normal : NORMAL; //æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«
 };
 
-//„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ
-// ’¸“_ƒVƒF[ƒ_
-//„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ
+//â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€
+//â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 {
-	//ƒsƒNƒZƒ‹ƒVƒF[ƒ_[‚Ö“n‚·î•ñ
+	//ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã¸æ¸¡ã™æƒ…å ±
     VS_OUT outData;
 
-	//ƒ[ƒJƒ‹À•W‚ÉAƒ[ƒ‹ƒhEƒrƒ…[EƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñ‚ð‚©‚¯‚Ä
-	//ƒXƒNƒŠ[ƒ“À•W‚É•ÏŠ·‚µAƒsƒNƒZƒ‹ƒVƒF[ƒ_[‚Ö
-    outData.pos = mul(pos, matWVP);
-    uv.w = 1; //w¬•ª‚Í0‚É‚·‚é
-    outData.uv = uv.xy; //UVÀ•W‚Í‚»‚Ì‚Ü‚Ü
-
-   
+	//ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ã«ã€ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒ»ãƒ“ãƒ¥ãƒ¼ãƒ»ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ã‚’ã‹ã‘ã¦
+    //ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ã«å¤‰æ›ã—ã€ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã¸
+    outData.spos = mul(pos, matWVP);
+    //ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‚‚ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã¸
+    outData.wpos = mul(pos, matWorld);
+    outData.normal = mul(normal, matNormal);
     
-    normal = mul(normal, matNormal); //–@üƒxƒNƒgƒ‹‚ðƒ[ƒ‹ƒhEƒrƒ…[EƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñ‚Å•ÏŠ·
-    normal = normalize(normal); //–@üƒxƒNƒgƒ‹‚ð³‹K‰»=’·‚³1‚É)
-    normal.w = 0; //w¬•ª‚Í0‚É‚·‚é
-    float4 light = float4(-1, 0.5, -0.7, 0);
-    light = normalize(light);
-    light.w = 0;
-    outData.color = clamp(dot(normal, light), 0, 1);
+    uv.w = 1; //wæˆåˆ†ã¯0ã«ã™ã‚‹
+    outData.uv = uv.xy; //UVåº§æ¨™ã¯ãã®ã¾ã¾
 
-	//‚Ü‚Æ‚ß‚Äo—Í
+    //normal = mul(normal, matNormal); //æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«ã‚’ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒ»ãƒ“ãƒ¥ãƒ¼ãƒ»ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ã§å¤‰æ›
+    //normal = normalize(normal); //æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«ã‚’æ­£è¦åŒ–=é•·ã•1ã«)
+    //normal.w = 0; //wæˆåˆ†ã¯0ã«ã™ã‚‹
+    //float4 light = float4(-1, 0.5, -0.7, 0);
+    //light = normalize(light);
+    //light.w = 0;
+    //outData.color = clamp(dot(normal, light), 0, 1);
+
+	//ã¾ã¨ã‚ã¦å‡ºåŠ›
     return outData;
 }
 
-//„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ
-// ƒsƒNƒZƒ‹ƒVƒF[ƒ_
-//„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ
+//â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€
+//â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 float4 PS(VS_OUT inData) : SV_Target
 {
+    float4 light = float4(-1, 0.5, -0.7, 0);
     //return float4(1, 1, 0, 1);
     float4 color;
     if (useTexture == 1)
     {
-        color = g_texture.Sample(g_sampler, inData.uv); //ƒeƒNƒXƒ`ƒƒ[‚©‚çF‚ðŽæ“¾
+        color = g_texture.Sample(g_sampler, inData.uv); //ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ¼ã‹ã‚‰è‰²ã‚’å–å¾—
     }
     else
     {
         color = diffuseColor;
 
     }
+    //color = 
     //float4 ret = float4(inData.uv.x, inData.uv.y, 0, 1);
-    return color * inData.color;
+    return color;
 }

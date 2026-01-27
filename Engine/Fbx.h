@@ -13,21 +13,21 @@
 
 namespace Math
 {
-	//s—ñ®‚ğ‰ğ‚­ŠÖ”
+	//è¡Œåˆ—å¼ã‚’è§£ãé–¢æ•°
 	float Det(XMFLOAT3 a, XMFLOAT3 b, XMFLOAT3 c);
-	//Ray‚ÆOŠpŒ`‚Ì“–‚½‚è”»’è‚ğs‚¤ŠÖ”
+	//Rayã¨ä¸‰è§’å½¢ã®å½“ãŸã‚Šåˆ¤å®šã‚’è¡Œã†é–¢æ•°
 	bool Intersect(XMFLOAT3 origin, XMFLOAT3 ray, XMFLOAT3 v0, XMFLOAT3 v1, XMFLOAT3 v2, float& dist);
 }
 
 
 
-//RayCast‚Ì‚½‚ß‚Ìƒf[ƒ^‚ğ—pˆÓ
+//RayCastã®ãŸã‚ã®ãƒ‡ãƒ¼ã‚¿ã‚’ç”¨æ„
 struct RayCastData
 {
-	XMFLOAT4 start;//Ray‚Ìn“_
-	XMFLOAT4 dir;  //Ray‚Ì•ûŒüi³‹K‰»‚µ‚Ä‚ ‚é‚±‚Æj
-	bool isHit;    //“–‚½‚Á‚½‚©‚Ç‚¤‚©
-	float dist;    //n“_‚©‚ç‚Ì‹——£
+	XMFLOAT4 start;//Rayã®å§‹ç‚¹
+	XMFLOAT4 dir;  //Rayã®æ–¹å‘ï¼ˆæ­£è¦åŒ–ã—ã¦ã‚ã‚‹ã“ã¨ï¼‰
+	bool isHit;    //å½“ãŸã£ãŸã‹ã©ã†ã‹
+	float dist;    //å§‹ç‚¹ã‹ã‚‰ã®è·é›¢
 };
 
 class Fbx
@@ -48,14 +48,23 @@ private:
 	{
 		Texture* pTexture;
 		XMFLOAT4 diffuse;
+		XMFLOAT4 ambient;
+		XMFLOAT4 specular;
+		float    shininess;
+		XMFLOAT4 factor;
 	};
 
 	struct CONSTANT_BUFFER
 	{
-		XMMATRIX	matWVP;
-		XMMATRIX	matNormal;
-		XMFLOAT4	diffuse;
-		BOOL		materialFlag; //ƒ}ƒeƒŠƒAƒ‹‚ª‚ ‚é‚©‚È‚¢‚©
+		XMMATRIX	matWVP; //ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒ“ãƒ¥ãƒ¼å°„å½±è¡Œåˆ—
+		XMMATRIX	matWorld; //ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—
+		XMMATRIX	matNormal; //æ³•ç·šå¤‰æ›è¡Œåˆ—
+		XMFLOAT4	diffuse; //æè³ªã®è‰²
+		XMFLOAT4    diffuseFactor; //æ‹¡æ•£åå°„ã®å¼·ã•
+		XMFLOAT4	specular; //é¡é¢åå°„ã®è‰²
+		XMFLOAT4	shininess; //é¡é¢åå°„ã®é‹­ã• 4è¦ç´ åŒã˜ã®ãŒå…¥ã£ã¦ã‚‹
+		XMFLOAT4	ambient; //ç’°å¢ƒå…‰ã®è‰²
+		BOOL		materialFlag; //ãƒãƒ†ãƒªã‚¢ãƒ«ãŒã‚ã‚‹ã‹ãªã„ã‹
 	};
 	struct VERTEX
 	{
@@ -64,20 +73,20 @@ private:
 		XMVECTOR normal;
 	};
 
-	//ƒoƒbƒtƒ@‚ÌŠF‚³‚ñ
+	//ãƒãƒƒãƒ•ã‚¡ã®çš†ã•ã‚“
 	ID3D11Buffer* pVertexBuffer_;
 	ID3D11Buffer** pIndexBuffer_;
 	ID3D11Buffer* pConstantBuffer_;
 	std::vector<MATERIAL> pMaterialList_;
-	std::vector<int> indexCount_;//ƒ}ƒeƒŠƒAƒ‹‚²‚Æ‚ÌƒCƒ“ƒfƒbƒNƒX”
+	std::vector<int> indexCount_;//ãƒãƒ†ãƒªã‚¢ãƒ«ã”ã¨ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹æ•°
 
 	int vertexCount_;
 	int polygonCount_;
 	int materialCount_;
 
-	//š@¸‚í‚ê‚µŒÃ‘ã‚Ìƒf[ƒ^‚½‚¿
-	std::vector<VERTEX> pVertices_; //’¸“_ƒf[ƒ^‘S•”
-	std::vector<std::vector<int>> ppIndex_; //ƒ}ƒeƒŠƒAƒ‹‚²‚Æ‚ÌƒCƒ“ƒfƒbƒNƒXƒf[ƒ^ [material][index]
+	//â˜…ã€€å¤±ã‚ã‚Œã—å¤ä»£ã®ãƒ‡ãƒ¼ã‚¿ãŸã¡
+	std::vector<VERTEX> pVertices_; //é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿å…¨éƒ¨
+	std::vector<std::vector<int>> ppIndex_; //ãƒãƒ†ãƒªã‚¢ãƒ«ã”ã¨ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒ‡ãƒ¼ã‚¿ [material][index]
 	//auto& arr = ppIndex_[1];
 	//arr[0]~arr[index - 1];
 
