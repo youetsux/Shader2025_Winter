@@ -82,7 +82,7 @@ float4 PS(VS_OUT inData) : SV_Target
     float4 diffuse;
     float4 ambientColor = ambient;
     float4 ambentFactor = { 0.2, 0.2, 0.2, 1.0 };
-    float3 dir = normalize(lightPosition.xyz - inData.wpos.xyz); //ピクセル位置のポリゴンの3次元座標＝wpos
+    float3 dir = normalize(lightPosition.xyz); //ピクセル位置のポリゴンの3次元座標＝wpos
     
     diffuse = diffuseColor * diffusefactor * clamp(dot(inData.normal.xyz, dir), 0, 1);
     float4 color;

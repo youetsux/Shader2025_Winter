@@ -323,7 +323,9 @@ void Fbx::InitMaterial(FbxNode* pNode)
 			}
 			FbxSurfacePhong* pMaterial = (FbxSurfacePhong*)pNode->GetMaterial(i);
 			FbxDouble  diffuse = pMaterial->DiffuseFactor;
+			FbxDouble3 diffuseColor = pMaterial->Diffuse;
 			FbxDouble3  ambient = pMaterial->Ambient;
+			pMaterialList_[i].diffuse = XMFLOAT4((float)diffuseColor[0], (float)diffuseColor[1], (float)diffuseColor[2], 1.0f);
 			pMaterialList_[i].factor = XMFLOAT4((float)diffuse, (float)diffuse, (float)diffuse, (float)diffuse);
 			pMaterialList_[i].ambient = { (float)ambient[0], (float)ambient[1], (float)ambient[2], 1.0f };
 			//あなたはフォンのパラメータを持ってますか？
