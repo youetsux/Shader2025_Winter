@@ -23,7 +23,11 @@ public:
 	void Draw()override;
 	void Release()override;
 private:
-	Sprite* pMelbourne_;
+	int hball_;    //モデル番号
+	int hRoom_;
+	int hGround_;
+	int hDonut_;
+	//Sprite* pMelbourne_;
 	ID3D11Buffer* pConstantBuffer_;
 	void InitConstantBuffer();
 };
