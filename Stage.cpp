@@ -131,7 +131,7 @@ void Stage::Draw()
     Transform tr;
     tr.position_ = { 0, 0, 0 };
     //tr.scale_ = { 5.0f, 5.0f, 5.0f };
-    tr.rotate_ = { 0,0,0 };
+    tr.rotate_ = { 0, 180, 0 };
     //Model::SetTransform(hGround, tr);
     //Model::Draw(hGround);
 
