@@ -37,7 +37,7 @@ XMMATRIX Transform::GetWorldMatrix()
 
 XMMATRIX Transform::GetNormalMatrix()
 {
-	// World の逆転置
+	// World の逆転置(平行移動成分の無視）
 	XMMATRIX world = GetWorldMatrix();
 	XMMATRIX invWorld = XMMatrixInverse(nullptr, world);
 	return XMMatrixTranspose(invWorld);

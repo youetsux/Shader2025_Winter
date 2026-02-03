@@ -54,10 +54,11 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
     outData.spos = mul(pos, matWVP);
     //ワールド座標もピクセルシェーダーへ
     outData.wpos = mul(pos, matWorld);
-    float4 n = normal;
-    n.w = 0;
-    outData.normal = mul(n, matNormal);
-    outData.normal.xyz = normalize(mul(n, matNormal).xyz);
+
+    
+    normal.w = 0; //法線ベクトルのw成分は0にする
+    outData.normal = mul(normal, matNormal);
+    
     
     uv.w = 0; //w成分は0にする
     outData.uv = uv.xy; //UV座標はそのまま
@@ -91,7 +92,9 @@ float4 PS(VS_OUT inData) : SV_Target
     
     float3 k = { 0.2f, 0.2f, 1.0f };
     float len = length(lightPosition.xyz - inData.wpos.xyz);
-    float dTerm = 1.0 / (k.x + k.y * len + k.z * len * len); //距離減衰計算
+    //float dTerm = 1.0 / (k.x + k.y * len + k.z * len * len); //距離減衰計算
+    float dTerm = 1.0;
+    
     float3 N = normalize(inData.normal.xyz);
     diffuse = diffuseColor * diffusefactor * clamp(dot(N, dir), 0, 1) * dTerm;
     
@@ -102,7 +105,7 @@ float4 PS(VS_OUT inData) : SV_Target
     if (ndotl > 0.0)
     {
     
-        float3 R = reflect(-L, N);
+        float3 R = reflect(L, N);
         float3 V = normalize(inData.eyev.xyz);
         spec = pow(saturate(dot(R, V)), 32.0)*ndotl;
     }
@@ -127,6 +130,7 @@ float4 PS(VS_OUT inData) : SV_Target
     
 
     color =  diffuseTerm + specularTerm + ambientTerm;
+    //color = float4((N.x + 1.0) / 2.0, (N.y + 1.0) / 2.0, (N.z + 1.0) / 2.0, 1.0);
     //float4 ret = float4(inData.uv.x, inData.uv.y, 0, 1);
     //float3 NC = normalize(inData.normal.xyz);
     //return float4(NC * 0.5 + 0.5, 1); // 法線可視化
