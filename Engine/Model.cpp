@@ -43,11 +43,7 @@ void Model::Draw(int hModel)
 	                 ->Draw(modelList[hModel]->transform_);
 }
 
-void Model::DrawPseudoNormal(int hModel)
-{
-	modelList[hModel]->pfbx_
-		->DrawPseudoNormal(modelList[hModel]->transform_);
-}
+
 
 void Model::Release()
 {

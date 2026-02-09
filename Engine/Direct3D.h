@@ -15,7 +15,6 @@ enum SHADER_TYPE
 {
 	SHADER_3D,	//3D用シェーダー
 	SHADER_2D,	//2D用シェーダー
-	SHADER_NORMALTEST, //法線マップ用シェーダー
 	SHADER_MAX //シェーダーの最大数
 };
 
@@ -28,7 +27,6 @@ namespace Direct3D
 	HRESULT InitShader();
 	HRESULT InitShader3D();//3D用シェーダー初期化
 	HRESULT InitShader2D();//2D用シェーダー初期化
-	HRESULT InitShaderNormalTest();//法線マップ用シェーダー初期化
 
 	void SetShader(SHADER_TYPE type); //シェーダーをセット
 
