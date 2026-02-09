@@ -12,6 +12,11 @@
 #include "imgui/imgui_impl_win32.h"
 
 
+namespace 
+{
+    bool isBump = false;
+}
+
 
 Stage::Stage(GameObject* parent)
 	:GameObject(parent, "Stage"),  pConstantBuffer_(nullptr)
@@ -103,6 +108,10 @@ void Stage::Update()
         p = { p.x ,p.y - 0.01f, p.z,p.w };
         Direct3D::SetLightPos(p);
     }
+    if(Input::IsKeyDown(DIK_B))
+    {
+        isBump = !isBump;
+	}
 
     //コンスタントバッファの設定と、シェーダーへのコンスタントバッファのセットを書くよ
     CONSTANTBUFFER_STAGE cb;
@@ -144,6 +153,14 @@ void Stage::Draw()
     tDonut.rotate_.y += 0.1;
     Model::SetTransform(hDonut_, tDonut);
     Model::Draw(hDonut_);
+
+
+	Transform tGround;
+	tGround.scale_ = { 2.0f,2.0f,2.0f };
+	tGround.position_ = { 0, 0.01f,0 };
+	Model::SetTransform(hGround_, tGround);
+    Model::Draw(hGround_);
+  
 
 	ImGui::Text("Stage Class rot:%lf", tDonut.rotate_.z);
 }

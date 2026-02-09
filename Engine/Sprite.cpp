@@ -159,7 +159,7 @@ void Sprite::Draw(XMMATRIX& worldMatrix)
 
     // コンスタントバッファ更新
     CONSTANT_BUFFER cb;
-    cb.matWorld = XMMatrixTranspose(worldMatrix);
+    cb.matWorld = worldMatrix;
 
     D3D11_MAPPED_SUBRESOURCE pdata;
     Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);

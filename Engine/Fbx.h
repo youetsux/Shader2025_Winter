@@ -36,6 +36,7 @@ public:
 	Fbx();
 	HRESULT Load(std::string fileName);
 	void    Draw(Transform& transform);
+	void	DrawPseudoNormal(Transform& transform);
 	void    Release();
 
 	void InitVertex(FbxMesh* mesh);

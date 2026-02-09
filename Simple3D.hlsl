@@ -10,9 +10,9 @@ SamplerState g_sampler : register(s0); //サンプラー
 //───────────────────────────────────────
 cbuffer global : register(b0)
 {
-    float4x4 matWVP; // ワールド・ビュー・プロジェクションの合成行列
-    float4x4 matWorld; // ワールド行列
-    float4x4 matNormal; // 法線変換行列
+    row_major float4x4 matWVP; // ワールド・ビュー・プロジェクションの合成行列
+    row_major float4x4 matWorld; // ワールド行列
+    row_major float4x4 matNormal; // 法線変換行列
     float4 diffuseColor; // ディフューズ色
     float4 diffusefactor; // ディフューズ係数
     float4 specular; // スペキュラ色
@@ -85,15 +85,15 @@ float4 PS(VS_OUT inData) : SV_Target
     //return float4(1, 1, 0, 1);
     float4 diffuse;
     float4 ambientColor = ambient;
-    float4 ambentFactor = { 0.2, 0.2, 0.2, 1.0 };
+    float4 ambentFactor = { 0.1, 0.1, 0.1, 1.0 };
     float3 dir = normalize(lightPosition.xyz - inData.wpos.xyz); //ピクセル位置のポリゴンの3次元座標＝wpos
     
 
     
     float3 k = { 0.2f, 0.2f, 1.0f };
     float len = length(lightPosition.xyz - inData.wpos.xyz);
-    //float dTerm = 1.0 / (k.x + k.y * len + k.z * len * len); //距離減衰計算
-    float dTerm = 1.0;
+    float dTerm = 1.0 / (k.x + k.y * len + k.z * len * len); //距離減衰計算
+    //float dTerm = 1.0;
     
     float3 N = normalize(inData.normal.xyz);
     diffuse = diffuseColor * diffusefactor * clamp(dot(N, dir), 0, 1) * dTerm;
@@ -124,7 +124,7 @@ float4 PS(VS_OUT inData) : SV_Target
     }
     else
     {
-        diffuseTerm = diffuse;
+        diffuseTerm = diffuse*dTerm;
         ambientTerm = ambentFactor * diffuseColor;
     }
     
