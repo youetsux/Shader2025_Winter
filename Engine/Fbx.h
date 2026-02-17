@@ -36,6 +36,7 @@ public:
 	Fbx();
 	HRESULT Load(std::string fileName);
 	void    Draw(Transform& transform);
+	void	DrawPseudoNormal(Transform& transform);
 	void    Release();
 
 	void InitVertex(FbxMesh* mesh);
@@ -47,6 +48,7 @@ private:
 	struct MATERIAL
 	{
 		Texture* pTexture;
+		Texture* pNormalTexture;
 		XMFLOAT4 diffuse;
 		XMFLOAT4 ambient;
 		XMFLOAT4 specular;
@@ -70,7 +72,9 @@ private:
 	{
 		XMVECTOR position;
 		XMVECTOR uv;
-		XMVECTOR normal;
+		XMVECTOR normal;//法線
+		XMVECTOR tangent; //接線
+		XMVECTOR binormal; //従法線
 	};
 
 	//バッファの皆さん

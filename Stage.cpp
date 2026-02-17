@@ -62,7 +62,7 @@ void Stage::Initialize()
 	assert(hRoom_ >= 0);
 	hGround_ = Model::Load("plane3.fbx");
 	assert(hGround_ >= 0);
-	hDonut_ = Model::Load("donut_phong.fbx");
+	hDonut_ = Model::Load("normalmapedbox.fbx");
 	assert(hDonut_ >= 0);
 	//pMelbourne_ = new Sprite(L"Assets\\melbourne.png");
 	Camera::SetPosition({ 0, 0.8, -2.8 });
@@ -148,11 +148,11 @@ void Stage::Draw()
     Model::Draw(hRoom_);
 
     static Transform tDonut;
-    tDonut.scale_ = { 0.25,0.25,0.25 };
-    tDonut.position_ = { 0, 0.5, 0 };
+    //tDonut.scale_ = { 1.0, 1.0, 1.0 };
+    tDonut.position_ = { 0, 0.5, 1 };
     tDonut.rotate_.y += 0.1;
     Model::SetTransform(hDonut_, tDonut);
-    Model::Draw(hDonut_);
+    Model::DrawPseudoNormal(hDonut_);
 
 
 	Transform tGround;

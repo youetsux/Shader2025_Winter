@@ -89,22 +89,6 @@ void Fbx::Draw(Transform& transform)
 	transform.Calculation();
 
 
-
-
-	//for (int i = 0;i < materialCount_;i++)
-	//{
-	//	if (pMaterialList_[i].pTexture)
-	//	{
-	//		cb.materialFlag = { 1, 1, 1,1 };
-	//		cb.diffuse = XMFLOAT4(1, 1, 1, 1);//保険
-	//	}
-	//	else
-	//	{
-	//		cb.materialFlag = { 0,0,0,0 };
-	//		cb.diffuse = pMaterialList_[i].diffuse;
-	//	}
-	//}
-
 	//頂点バッファ、インデックスバッファ、コンスタントバッファをパイプラインにセット
 	//頂点バッファ
 	UINT stride = sizeof(VERTEX);
@@ -160,6 +144,73 @@ void Fbx::Draw(Transform& transform)
 	}
 }
 
+void Fbx::DrawPseudoNormal(Transform& transform)
+{
+	//shaderを法線可視化用に変更
+	Direct3D::SetShader(SHADER_NORMALMAP);
+	transform.Calculation();
+
+	//頂点バッファ、インデックスバッファ、コンスタントバッファをパイプラインにセット
+	UINT stride = sizeof(VERTEX);
+	UINT offset = 0;
+	Direct3D::pContext->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
+
+	for (int i = 0; i < materialCount_; i++)
+	{
+		CONSTANT_BUFFER cb;
+		cb.matWVP = transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix();
+		cb.matWorld = transform.GetWorldMatrix();
+		cb.matNormal = transform.GetNormalMatrix();
+		cb.ambient = pMaterialList_[i].ambient;
+		cb.specular = pMaterialList_[i].specular;
+		cb.shininess = { pMaterialList_[i].shininess,
+			pMaterialList_[i].shininess,
+			pMaterialList_[i].shininess,
+			pMaterialList_[i].shininess };
+		cb.diffuse = pMaterialList_[i].diffuse;
+		cb.diffuseFactor = pMaterialList_[i].factor;
+		cb.materialFlag = pMaterialList_[i].pTexture != nullptr;
+
+
+
+
+		D3D11_MAPPED_SUBRESOURCE pdata;
+		Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
+		memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));	// データを値を送る
+		Direct3D::pContext->Unmap(pConstantBuffer_, 0);	//再開
+
+		// インデックスバッファーをセット
+		stride = sizeof(int);
+		offset = 0;
+		Direct3D::pContext->IASetIndexBuffer(pIndexBuffer_[i], DXGI_FORMAT_R32_UINT, 0);
+
+		//コンスタントバッファ
+		Direct3D::pContext->VSSetConstantBuffers(0, 1, &pConstantBuffer_);	//頂点シェーダー用	
+		Direct3D::pContext->PSSetConstantBuffers(0, 1, &pConstantBuffer_);	//ピクセルシェーダー用
+
+		//色のテクスチャがある場合はセット
+		if (pMaterialList_[i].pTexture)
+		{
+			ID3D11SamplerState* pSampler = pMaterialList_[i].pTexture->GetSampler();
+			Direct3D::pContext->PSSetSamplers(0, 1, &pSampler);
+
+			ID3D11ShaderResourceView* pSRV = pMaterialList_[i].pTexture->GetSRV();
+			Direct3D::pContext->PSSetShaderResources(0, 1, &pSRV);
+		}
+		//ノーマルマップのテクスチャがある場合はセット
+		if(pMaterialList_[i].pNormalTexture)
+		{
+			ID3D11SamplerState* pSampler = pMaterialList_[i].pNormalTexture->GetSampler();
+			Direct3D::pContext->PSSetSamplers(1, 1, &pSampler);
+			ID3D11ShaderResourceView* pSRV = pMaterialList_[i].pNormalTexture->GetSRV();
+			Direct3D::pContext->PSSetShaderResources(1, 1, &pSRV);
+		}
+
+		//描画
+		Direct3D::pContext->DrawIndexed(indexCount_[i], 0, 0);
+	}
+}
+
 
 
 void Fbx::Release()
@@ -169,38 +220,71 @@ void Fbx::Release()
 void Fbx::InitVertex(FbxMesh* mesh)
 {
 	//VERTEX* vertices = new VERTEX[vertexCount_];
-	pVertices_.resize(vertexCount_); //修正
+	pVertices_.resize(polygonCount_ * 3); //修正
+	vertexCount_ = polygonCount_ * 3;
 	//全ポリゴン
+	// Tangent の存在確認
+	FbxLayerElementTangent* tangentElement = mesh->GetElementTangent();
+	int vIndex = 0;
+
 	for (long poly = 0; poly < polygonCount_; poly++)
 	{
 		//3頂点分
 		for (int vertex = 0; vertex < 3; vertex++)
 		{
 			//調べる頂点の番号
-			int index = mesh->GetPolygonVertex(poly, vertex);
+			//int index = mesh->GetPolygonVertex(poly, vertex);
+			int cp = mesh->GetPolygonVertex(poly, vertex);
 
 			//頂点の位置
-			FbxVector4 pos = mesh->GetControlPointAt(index);
-			//vertices[index].position 
-			pVertices_[index].position //修正
+			FbxVector4 pos = mesh->GetControlPointAt(cp);
+			pVertices_[vIndex].position //修正
 				= XMVectorSet((float)pos[0], (float)pos[1], (float)pos[2], 0.0f);
 
 			//頂点のUV
 			FbxLayerElementUV* pUV = mesh->GetLayer(0)->GetUVs();
 			int uvIndex = mesh->GetTextureUVIndex(poly, vertex, FbxLayerElement::eTextureDiffuse);
 			FbxVector2  uv = pUV->GetDirectArray().GetAt(uvIndex);
-			//vertices[index].uv 
-			pVertices_[index].uv = XMVectorSet((float)uv.mData[0], (float)(1.0f - uv.mData[1]), 0.0f, 1.0f);
+			pVertices_[vIndex].uv = XMVectorSet((float)uv.mData[0], (float)(1.0f - uv.mData[1]), 0.0f, 1.0f);
 		
 			//頂点の法線
 			FbxVector4 normal;
 			mesh->GetPolygonVertexNormal(poly, vertex, normal);
-			//vertices[index].normal
-			pVertices_[index].normal = XMVectorSet((float)normal[0], (float)normal[1], (float)normal[2], 0.0f);
+			pVertices_[vIndex].normal = XMVectorSet((float)normal[0], (float)normal[1], (float)normal[2], 0.0f);
+			
+			if(tangentElement != nullptr)
+			{
+				int tangentIndex = 0;
+				//頂点ごとに接線の情報があるか
+				if (tangentElement->GetReferenceMode() == FbxGeometryElement::eDirect)
+				{
+					tangentIndex = poly * 3 + vertex;
+				}
+				//頂点ごとに接線の情報がない場合、ポリゴンごとに接線の情報があるか
+				else if (tangentElement->GetReferenceMode() == FbxGeometryElement::eIndexToDirect)
+				{
+					tangentIndex = tangentElement->GetIndexArray().GetAt(poly * 3 + vertex);
+				}
+				FbxVector4 tangent = tangentElement->GetDirectArray().GetAt(tangentIndex);
+				pVertices_[vIndex].tangent = { (float)tangent[0], (float)tangent[1], (float)tangent[2], 0.0f };
+			}
+			else
+			{   //接線の情報がない場合は0ベクトルを入れておく(ごまかし）
+				pVertices_[vIndex].tangent = { 0.0f, 0.0f, 0.0f, 0.0f };
+			}
+			vIndex++;
 		}
 	}
-// 頂点バッファ作成
-//（自分でやって）
+
+	for(int i=0;i< vertexCount_; i++)
+	{
+		XMVECTOR N = XMVector3Normalize(pVertices_[i].normal);
+		XMVECTOR T = XMVector3Normalize(pVertices_[i].tangent);
+		//従法線は外積で求める
+		XMVECTOR B = XMVector3Normalize(XMVector3Cross(N, T));
+		pVertices_[i].binormal = B;
+	}
+
 //頂点バッファ
 	HRESULT hr;
 	D3D11_BUFFER_DESC bd_vertex;
@@ -250,7 +334,8 @@ void Fbx::InitIndex(FbxMesh* mesh)
 				for (long vertex = 0; vertex < 3; vertex++)
 				{
 					//index[count] = mesh->GetPolygonVertex(poly, vertex);
-					indeces.push_back(mesh->GetPolygonVertex(poly, vertex)); //修正
+					//indeces.push_back(mesh->GetPolygonVertex(poly, vertex)); //修正
+					indeces.push_back((int)(poly*3 + vertex)); //修正
 					//count++;
 				}
 			}
@@ -339,6 +424,19 @@ void Fbx::InitMaterial(FbxNode* pNode)
 				//テクスチャファイルが無いときの処理(エラー）
 				
 			}
+			//ノーマルマップのテクスチャも同様にして取得
+			fs::path normalTexturePath = "textureNormal.png";
+			if (fs::is_regular_file(normalTexturePath))
+			{
+				pMaterialList_[i].pNormalTexture = new Texture;
+				pMaterialList_[i].pNormalTexture->Load(normalTexturePath.string());
+			}
+			else
+			{
+				pMaterialList_[i].pNormalTexture = nullptr;
+			}
+
+
 			FbxSurfacePhong* pMaterial = (FbxSurfacePhong*)pNode->GetMaterial(i);
 			FbxDouble  diffuse = pMaterial->DiffuseFactor;
 			FbxDouble3 diffuseColor = pMaterial->Diffuse;

@@ -60,8 +60,8 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
     outData.normal = mul(normal, matNormal);
     
     
-    uv.w = 0; //w成分は0にする
-    outData.uv = uv.xy; //UV座標はそのまま
+    
+    outData.uv = uv; //UV座標はそのまま
     outData.eyev = outData.wpos - eyePosition; //視線ベクトルを計算して渡す
 
     //normal = mul(normal, matNormal); //法線ベクトルをワールド・ビュー・プロジェクション行列で変換
